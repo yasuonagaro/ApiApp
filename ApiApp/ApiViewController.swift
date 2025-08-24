@@ -14,6 +14,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     var shopArray: [ApiResponse.Result.Shop] = []
     var apiKey: String = ""
     var searchKeyword: String?
+    var searchPet: Int?
+    var searchParking: Int?
     
     var isLoading = false
     var isLastLoaded = false
@@ -40,9 +42,11 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     // SearchConditionViewControllerDelegate メソッドの実装
-    func searchButtonTapped(keyword: String) {
+    func searchButtonTapped(keyword: String, parking: Int, pet: Int) {
         // 渡されたキーワードを保存
         self.searchKeyword = keyword
+        self.searchParking = parking
+        self.searchPet = pet
         
         // 新しいキーワードでデータを再検索（appendLoad: falseで初期状態から読み込む）
         updateShopArray(appendLoad: false)
@@ -57,6 +61,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 // 遷移先のdelegateプロパティに自分自身(self)を設定します
                 destinationVC.delegate = self
                 destinationVC.currentKeyword = self.searchKeyword
+                destinationVC.currentParking = self.searchParking
+                destinationVC.currentPet = self.searchPet
             }
         }
     }
@@ -94,6 +100,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             "start": startIndex,
             "count": 20,
             "keyword": searchKeyword ?? "",
+            "parking": searchParking ?? 0,
+            "pet": searchPet ?? 0,
             "format": "json"
         ]
         print("APIリクエスト 開始位置: \(parameters["start"]!) 読み込み店舗数: \(parameters["count"]!)")
@@ -188,6 +196,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 favoriteShop.id = shop.id
                 favoriteShop.name = shop.name
                 favoriteShop.logoImageURL = shop.logo_image
+                favoriteShop.address = shop.address
                 if shop.coupon_urls.sp == "" {
                     favoriteShop.couponURL = shop.coupon_urls.pc
                 } else {
