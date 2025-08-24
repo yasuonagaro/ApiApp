@@ -175,7 +175,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CnL-em-W72">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CnL-em-W72" userLabel="hasParking">
                                 <rect key="frame" x="135" y="515" width="200" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="AgS-1J-mEt"/>
@@ -187,7 +187,7 @@
                                 </segments>
                                 <color key="selectedSegmentTintColor" systemColor="linkColor"/>
                             </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jZM-Yo-aWy">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jZM-Yo-aWy" userLabel="isPetFriendly">
                                 <rect key="frame" x="135" y="566" width="200" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="K5x-uN-EAf"/>
@@ -222,9 +222,9 @@
                     <navigationItem key="navigationItem" id="OCV-Fw-AeD"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="hasParking" destination="CnL-em-W72" id="dh1-Up-dc1"/>
+                        <outlet property="isPetFriendly" destination="jZM-Yo-aWy" id="MaM-2T-VWW"/>
                         <outlet property="searchKeywordText" destination="sOB-Ex-BNF" id="DQU-hP-VVM"/>
-                        <outlet property="searchParking" destination="CnL-em-W72" id="fYC-dO-qf3"/>
-                        <outlet property="searchPet" destination="jZM-Yo-aWy" id="tTh-n0-jEc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mGW-Wr-qIG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

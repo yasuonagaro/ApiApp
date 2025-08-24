@@ -14,8 +14,8 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     var shopArray: [ApiResponse.Result.Shop] = []
     var apiKey: String = ""
     var searchKeyword: String?
-    var searchPet: Int?
-    var searchParking: Int?
+    var hasParking: Int?
+    var isPetFriendly: Int?
     
     var isLoading = false
     var isLastLoaded = false
@@ -26,6 +26,9 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        // Realmから保存された検索条件を読み込み
+        loadSavedSearchConditions()
         
         // APIキー読み込み
         let filePath = Bundle.main.path(forResource: "ApiKey", ofType:"plist" )
@@ -41,12 +44,28 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         updateShopArray()
     }
     
-    // SearchConditionViewControllerDelegate メソッドの実装
-    func searchButtonTapped(keyword: String, parking: Int, pet: Int) {
+    // Realmから保存された検索条件を読み込むメソッド
+    func loadSavedSearchConditions() {
+        if let savedConditions = realm.object(ofType: SearchConditions.self, forPrimaryKey: "savedSearchConditions") {
+            self.searchKeyword = savedConditions.keyword
+            self.hasParking = savedConditions.hasParking
+            self.isPetFriendly = savedConditions.isPetFriendly
+            print("Realmから検索条件を読み込みました: Keyword=\(savedConditions.keyword), Parking=\(savedConditions.hasParking), PetFriendly=\(savedConditions.isPetFriendly)")
+        } else {
+            print("保存された検索条件はありません。")
+            // 保存された条件がない場合のデフォルト値を設定
+            self.searchKeyword = "" // キーワードは空文字列に設定
+            self.hasParking = 0 // 0: 指定しない
+            self.isPetFriendly = 0 // 0: 指定しない
+        }
+    }
+    
+    // SearchConditionViewControllerDelegate メソッド
+    func searchButtonTapped(keyword: String, hasParking: Int, isPetFriendly: Int) {
         // 渡されたキーワードを保存
         self.searchKeyword = keyword
-        self.searchParking = parking
-        self.searchPet = pet
+        self.hasParking = hasParking
+        self.isPetFriendly = isPetFriendly
         
         // 新しいキーワードでデータを再検索（appendLoad: falseで初期状態から読み込む）
         updateShopArray(appendLoad: false)
@@ -54,21 +73,25 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     // Segueで画面遷移する際に呼ばれるメソッド
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Storyboardで設定したSegueのIdentifierを確認します
+        // Storyboardで設定したSegueのIdentifierを確認
         if segue.identifier == "toSearchCondition" {
-            // 遷移先のViewControllerを取得し、型キャストします
+            // 遷移先のViewControllerを取得し、型キャスト
             if let destinationVC = segue.destination as? SearchConditionViewController {
-                // 遷移先のdelegateプロパティに自分自身(self)を設定します
+                // 遷移先のdelegateプロパティに自分自身(self)を設定
                 destinationVC.delegate = self
+                
+                // Realmに保存されている最新の検索条件を渡す
                 destinationVC.currentKeyword = self.searchKeyword
-                destinationVC.currentParking = self.searchParking
-                destinationVC.currentPet = self.searchPet
+                destinationVC.currentParking = self.hasParking
+                destinationVC.currentPet = self.isPetFriendly
             }
         }
     }
     
     @objc func refresh() {
         // shopArray再読み込み
+        // リフレッシュ時もRealmから最新の検索条件を読み込んでからAPIリクエストを行う
+        loadSavedSearchConditions()
         updateShopArray()
     }
     
@@ -86,7 +109,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         if appendLoad {
             startIndex = shopArray.count + 1
         } else {
-            // 追加読み込みでない場合、テーブルを一番上までスクロールする
+            // 追加読み込みでない場合、テーブルを一番上までスクロール
             if !shopArray.isEmpty {
                 tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
             }
@@ -95,16 +118,21 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         // 読み込み中状態開始
         isLoading = true
         
+        // Realmに保存されている最新の検索条件をAPIリクエストのパラメータとして使用する
+        // loadSavedSearchConditions() が viewDidLoad() や refresh() で呼び出され、
+        // self.searchKeyword, self.hasParking, self.isPetFriendly が更新されていることを前提とする
         let parameters: [String: Any] = [
             "key": apiKey,
             "start": startIndex,
             "count": 20,
-            "keyword": searchKeyword ?? "",
-            "parking": searchParking ?? 0,
-            "pet": searchPet ?? 0,
+            "keyword": self.searchKeyword ?? "", // Realmから読み込まれたキーワードを使用
+            "parking": self.hasParking ?? 0,    // Realmから読み込まれた駐車場有無を使用
+            "pet": self.isPetFriendly ?? 0,      // Realmから読み込まれたペットの可否を使用
             "format": "json"
         ]
         print("APIリクエスト 開始位置: \(parameters["start"]!) 読み込み店舗数: \(parameters["count"]!)")
+        print("現在の検索条件: Keyword=\(self.searchKeyword ?? "なし"), Parking=\(self.hasParking ?? 0), PetFriendly=\(self.isPetFriendly ?? 0)")
+        
         AF.request("https://webservice.recruit.co.jp/hotpepper/gourmet/v1/", method: .get, parameters: parameters).responseDecodable(of: ApiResponse.self) { response in
             // 読み込み中状態終了
             self.isLoading = false

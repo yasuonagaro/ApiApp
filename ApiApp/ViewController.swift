@@ -42,7 +42,7 @@ class ViewController: UIViewController {
              apiVC.searchKeyword = keyword
              apiVC.updateShopArray(appendLoad: false)
          } else {
-             print("⚠️ ApiViewController がまだ生成されていません")
+             print("ApiViewController がまだ生成されていません")
          }
      }
 }
