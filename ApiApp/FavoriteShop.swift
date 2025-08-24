@@ -16,6 +16,9 @@ class FavoriteShop: Object {
 
     // 店舗画像URL
     @Persisted var logoImageURL = ""
+    
+    // 住所
+    @Persisted var address = ""
 
     // クーポン画面URL
     @Persisted var couponURL = ""

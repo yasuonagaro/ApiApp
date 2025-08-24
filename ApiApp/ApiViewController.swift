@@ -142,6 +142,7 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let url = URL(string: shop.logo_image)!
         cell.logoImageView.af.setImage(withURL: url)
         cell.shopNameLabel.text = shop.name
+        cell.addressLabel.text = shop.address
         let starImageName = shop.isFavorite ? "star.fill" : "star"
         let starImage = UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal)
         cell.favoriteButton.setImage(starImage, for: .normal)

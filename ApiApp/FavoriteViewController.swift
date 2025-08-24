@@ -57,8 +57,9 @@ class FavoriteViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ShopCell
         let favoriteShop = favoriteArray[indexPath.row]
         let url = URL(string: favoriteShop.logoImageURL)!
-        cell.logoImageView.af.setImage(withURL: url)
         cell.shopNameLabel.text = favoriteShop.name
+        cell.logoImageView.af.setImage(withURL: url)
+
         
         return cell
     }

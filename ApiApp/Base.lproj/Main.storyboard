@@ -57,6 +57,13 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uco-Wc-7oB" userLabel="Address Label">
+                                                    <rect key="frame" x="199" y="11" width="42" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3U1-u4-JkB">
                                                     <rect key="frame" x="390" y="7.3333333333333321" width="30" height="29.999999999999996"/>
                                                     <constraints>
@@ -84,6 +91,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="addressLabel" destination="Uco-Wc-7oB" id="4Eq-5R-p0P"/>
                                             <outlet property="favoriteButton" destination="3U1-u4-JkB" id="LU2-6S-mVw"/>
                                             <outlet property="logoImageView" destination="TuO-cd-OGk" id="YWc-yY-MVg"/>
                                             <outlet property="shopNameLabel" destination="6bB-C5-RoX" id="wed-js-AHh"/>
