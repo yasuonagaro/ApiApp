@@ -4,51 +4,68 @@ import AlamofireImage
 import RealmSwift
 import SafariServices
 
-class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SearchConditionViewControllerDelegate {
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var statusLabel: UILabel!
-
+    
     let realm = try! Realm()
-
+    
     var shopArray: [ApiResponse.Result.Shop] = []
-
     var apiKey: String = ""
-
+    var searchKeyword: String?
+    
     var isLoading = false
     var isLastLoaded = false
-
+    var isFirstLoad = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tableView.delegate = self
         tableView.dataSource = self
-
+        
         // APIキー読み込み
         let filePath = Bundle.main.path(forResource: "ApiKey", ofType:"plist" )
         let plist = NSDictionary(contentsOfFile: filePath!)!
         apiKey = plist["key"] as! String
-
-        // shopArray読み込み
-        updateShopArray()
-
+        
         // RefreshControlの設定
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
+        
+        // 初回データ読み込み
+        updateShopArray()
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        tableView.reloadData()
+    
+    // SearchConditionViewControllerDelegate メソッドの実装
+    func searchButtonTapped(keyword: String) {
+        // 渡されたキーワードを保存
+        self.searchKeyword = keyword
+        
+        // 新しいキーワードでデータを再検索（appendLoad: falseで初期状態から読み込む）
+        updateShopArray(appendLoad: false)
     }
-
+    
+    // Segueで画面遷移する際に呼ばれるメソッド
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Storyboardで設定したSegueのIdentifierを確認します
+        if segue.identifier == "toSearchCondition" {
+            // 遷移先のViewControllerを取得し、型キャストします
+            if let destinationVC = segue.destination as? SearchConditionViewController {
+                // 遷移先のdelegateプロパティに自分自身(self)を設定します
+                destinationVC.delegate = self
+                destinationVC.currentKeyword = self.searchKeyword
+            }
+        }
+    }
+    
     @objc func refresh() {
         // shopArray再読み込み
         updateShopArray()
     }
-
+    
     func updateShopArray(appendLoad: Bool = false) {
         // 現在読み込み中なら読み込みを開始しない
         if isLoading {
@@ -63,16 +80,20 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         if appendLoad {
             startIndex = shopArray.count + 1
         } else {
+            // 追加読み込みでない場合、テーブルを一番上までスクロールする
+            if !shopArray.isEmpty {
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            }
             startIndex = 1
         }
         // 読み込み中状態開始
         isLoading = true
-
+        
         let parameters: [String: Any] = [
             "key": apiKey,
             "start": startIndex,
             "count": 20,
-            "keyword": "ランチ",
+            "keyword": searchKeyword ?? "",
             "format": "json"
         ]
         print("APIリクエスト 開始位置: \(parameters["start"]!) 読み込み店舗数: \(parameters["count"]!)")
@@ -105,16 +126,16 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                 print(error)
                 self.shopArray = []
                 self.isLastLoaded = true
-                self.statusLabel.text = "データの取得が失敗しました"
+                self.statusLabel.text = "検索条件を設定してください"
             }
             self.tableView.reloadData()
         }
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return shopArray.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ShopCell
         let shop = shopArray[indexPath.row]
@@ -124,15 +145,15 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let starImageName = shop.isFavorite ? "star.fill" : "star"
         let starImage = UIImage(systemName: starImageName)?.withRenderingMode(.alwaysOriginal)
         cell.favoriteButton.setImage(starImage, for: .normal)
-
+        
         // 追加データの読み込みが必要か確認
         if shopArray.count - indexPath.row < 10 {
             self.updateShopArray(appendLoad: true)
         }
-
+        
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let shop = shopArray[indexPath.row]
@@ -147,12 +168,12 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         safariViewController.modalPresentationStyle = .pageSheet
         present(safariViewController, animated: true)
     }
-
+    
     @IBAction func tapFavoriteButton(_ sender: UIButton) {
         let point = sender.convert(CGPoint.zero, to: tableView)
         let indexPath = tableView.indexPathForRow(at: point)!
         let shop = shopArray[indexPath.row]
-
+        
         if shop.isFavorite {
             print("「\(shop.name)」をお気に入りから削除します")
             try! realm.write {
@@ -176,5 +197,5 @@ class ApiViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         tableView.reloadData()
     }
-
 }
+

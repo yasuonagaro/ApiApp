@@ -9,6 +9,7 @@ import UIKit
 import Parchment
 
 class ViewController: UIViewController {
+    var apiViewController: ApiViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,4 +36,13 @@ class ViewController: UIViewController {
         pagingView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor).isActive = true
         // ここまで追加
     }
+    
+    func updateSearchKeyword(_ keyword: String) {
+         if let apiVC = apiViewController {
+             apiVC.searchKeyword = keyword
+             apiVC.updateShopArray(appendLoad: false)
+         } else {
+             print("⚠️ ApiViewController がまだ生成されていません")
+         }
+     }
 }

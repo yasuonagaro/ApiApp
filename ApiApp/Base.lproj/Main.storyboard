@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TyA-uF-mte">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QlV-L2-hQ4">
     <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -19,10 +19,11 @@
                         <viewLayoutGuide key="safeArea" id="3le-MR-Fjc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="crv-wx-KvD"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F0n-cx-1EQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-547" y="-1319"/>
+            <point key="canvasLocation" x="343.63636363636368" y="-1319.2468619246863"/>
         </scene>
         <!--新着順-->
         <scene sceneID="2z0-n3-ub0">
@@ -100,6 +101,9 @@
                                 <rect key="frame" x="112.66666666666667" y="901" width="214.66666666666663" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="検索条件"/>
+                                <connections>
+                                    <segue destination="W3g-3C-hXd" kind="show" identifier="toSearchCondition" id="kol-0V-GS1"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bqb-wi-Awb"/>
@@ -122,6 +126,7 @@
                             <constraint firstItem="JOb-hf-bnF" firstAttribute="leading" secondItem="Bqb-wi-Awb" secondAttribute="leading" id="zeO-5P-7R4"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="cg0-nq-dVy"/>
                     <connections>
                         <outlet property="statusLabel" destination="GS0-X2-Iv6" id="2kK-Ot-Hja"/>
                         <outlet property="tableView" destination="JOb-hf-bnF" id="Cwd-7f-r2h"/>
@@ -129,7 +134,86 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="01B-gi-fYu" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-929.00763358778624" y="-602.11267605633805"/>
+            <point key="canvasLocation" x="-38.181818181818187" y="-602.51046025104608"/>
+        </scene>
+        <!--Search Condition View Controller-->
+        <scene sceneID="t1p-Gg-TUB">
+            <objects>
+                <viewController id="W3g-3C-hXd" customClass="SearchConditionViewController" customModule="ApiApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gtO-pq-w9O">
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="946"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="キーワード" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sOB-Ex-BNF">
+                                <rect key="frame" x="40" y="456" width="360" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="駐車場" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5IL-O0-OeC">
+                                <rect key="frame" x="40" y="520" width="48" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ペット" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C5h-JE-Hoj">
+                                <rect key="frame" x="40" y="571" width="277" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CnL-em-W72">
+                                <rect key="frame" x="135" y="515" width="87" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="AgS-1J-mEt"/>
+                                    <constraint firstAttribute="width" constant="87" id="vlH-6g-I5Q"/>
+                                </constraints>
+                                <segments>
+                                    <segment title=""/>
+                                    <segment title="あり"/>
+                                </segments>
+                                <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jZM-Yo-aWy">
+                                <rect key="frame" x="135" y="566" width="87" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="87" id="K5x-uN-EAf"/>
+                                    <constraint firstAttribute="height" constant="31" id="TGh-9a-eza"/>
+                                </constraints>
+                                <segments>
+                                    <segment title=""/>
+                                    <segment title="可"/>
+                                </segments>
+                                <color key="selectedSegmentTintColor" systemColor="linkColor"/>
+                            </segmentedControl>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="cHA-IP-U85"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sOB-Ex-BNF" firstAttribute="centerY" secondItem="gtO-pq-w9O" secondAttribute="centerY" id="GE4-NK-kdz"/>
+                            <constraint firstItem="jZM-Yo-aWy" firstAttribute="centerX" secondItem="C5h-JE-Hoj" secondAttribute="centerX" id="Igx-3J-tlL"/>
+                            <constraint firstItem="jZM-Yo-aWy" firstAttribute="centerY" secondItem="C5h-JE-Hoj" secondAttribute="centerY" id="KWQ-9n-TWV"/>
+                            <constraint firstItem="CnL-em-W72" firstAttribute="leading" secondItem="5IL-O0-OeC" secondAttribute="trailing" constant="47" id="QdS-le-ZPe"/>
+                            <constraint firstItem="CnL-em-W72" firstAttribute="centerY" secondItem="5IL-O0-OeC" secondAttribute="centerY" id="Qyh-Q9-rQz"/>
+                            <constraint firstItem="C5h-JE-Hoj" firstAttribute="leading" secondItem="sOB-Ex-BNF" secondAttribute="leading" id="THU-n2-fh4"/>
+                            <constraint firstItem="sOB-Ex-BNF" firstAttribute="leading" secondItem="cHA-IP-U85" secondAttribute="leading" constant="40" id="Yny-eY-VAz"/>
+                            <constraint firstItem="CnL-em-W72" firstAttribute="centerX" secondItem="jZM-Yo-aWy" secondAttribute="centerX" id="bd3-cv-ePU"/>
+                            <constraint firstItem="jZM-Yo-aWy" firstAttribute="top" secondItem="CnL-em-W72" secondAttribute="bottom" constant="20" id="fZN-DK-kDE"/>
+                            <constraint firstItem="5IL-O0-OeC" firstAttribute="top" secondItem="sOB-Ex-BNF" secondAttribute="bottom" constant="30" id="l1e-9Y-md7"/>
+                            <constraint firstItem="cHA-IP-U85" firstAttribute="trailing" secondItem="sOB-Ex-BNF" secondAttribute="trailing" constant="40" id="vvg-qT-7Ae"/>
+                            <constraint firstItem="5IL-O0-OeC" firstAttribute="leading" secondItem="sOB-Ex-BNF" secondAttribute="leading" id="wzp-W1-ePW"/>
+                            <constraint firstItem="C5h-JE-Hoj" firstAttribute="top" secondItem="5IL-O0-OeC" secondAttribute="bottom" constant="30" id="zAL-iu-P6P"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="OCV-Fw-AeD"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="searchKeywordText" destination="sOB-Ex-BNF" id="DQU-hP-VVM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mGW-Wr-qIG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-38.181818181818187" y="130.54393305439331"/>
         </scene>
         <!--お気に入り-->
         <scene sceneID="vs9-kW-gKu">
@@ -222,12 +306,33 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fLF-p5-5uc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-143" y="-602"/>
+            <point key="canvasLocation" x="748.63636363636374" y="-602.51046025104608"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="g5o-9a-4WZ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QlV-L2-hQ4" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jro-6r-cPH">
+                        <rect key="frame" x="0.0" y="62" width="440" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="TyA-uF-mte" kind="relationship" relationship="rootViewController" id="Ksh-U2-RVT"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cxA-km-bWe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-548.18181818181824" y="-1319.2468619246863"/>
         </scene>
     </scenes>
     <resources>
         <image name="star" catalog="system" width="128" height="116"/>
         <image name="star.fill" catalog="system" width="128" height="116"/>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
